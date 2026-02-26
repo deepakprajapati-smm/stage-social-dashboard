@@ -1,44 +1,26 @@
 'use client'
 
-import useSWR from 'swr'
-import { getStatus } from '@/lib/api'
-import { Zap, ZapOff } from 'lucide-react'
-import type { ChromeStatus } from '@/lib/types'
+import { usePathname } from 'next/navigation'
+
+const TITLES: Record<string, { label: string; desc: string }> = {
+  '/':          { label: 'Overview',       desc: 'Automation stats and recent activity' },
+  '/districts': { label: 'District Pages', desc: '12 Rajasthan districts on Facebook' },
+  '/movies':    { label: 'Movie Pages',    desc: 'Create and manage movie FB pages' },
+  '/jobs':      { label: 'Job History',    desc: 'All automation runs and logs' },
+}
 
 export function TopBar() {
-  const { data } = useSWR<ChromeStatus>('/api/status', getStatus, {
-    refreshInterval: 10000,
-  })
-
-  const ready     = data?.chrome_ready
-  const isLoading = ready === undefined
+  const path  = usePathname()
+  const meta  = TITLES[path] ?? TITLES['/']
+  const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 
   return (
-    <header className="h-13 border-b border-white/[0.06] bg-[#0e0e0e]/80 backdrop-blur-sm flex items-center justify-between px-6 shrink-0">
-
-      {/* Left — Page context (empty, pages fill this) */}
-      <div />
-
-      {/* Right — Chrome status */}
-      <div className="flex items-center gap-3">
-        {isLoading ? (
-          <div className="flex items-center gap-2 text-zinc-600 text-xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 animate-pulse" />
-            Checking...
-          </div>
-        ) : ready ? (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
-            <Zap className="w-3 h-3 text-green-400 fill-green-400" />
-            <span className="text-green-400 text-xs font-medium">Chrome Ready</span>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20">
-            <ZapOff className="w-3 h-3 text-red-400" />
-            <span className="text-red-400 text-xs font-medium">Chrome Offline</span>
-            <span className="text-zinc-600 text-xs hidden sm:inline">· run start-local.sh</span>
-          </div>
-        )}
+    <header className="h-14 border-b border-white/[0.06] bg-[#09090b]/60 backdrop-blur-xl flex items-center justify-between px-8 shrink-0">
+      <div className="flex items-baseline gap-3">
+        <h1 className="text-[15px] font-semibold text-white tracking-tight">{meta.label}</h1>
+        <span className="text-[12px] text-[#52525b] hidden md:block">{meta.desc}</span>
       </div>
+      <p className="text-[12px] text-[#3f3f46]">{today}</p>
     </header>
   )
 }

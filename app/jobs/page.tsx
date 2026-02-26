@@ -16,13 +16,11 @@ export default function JobsPage() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null)
 
   return (
-    <div className="space-y-6 max-w-5xl">
-      <div className="flex items-end justify-between">
-        <div>
-          <p className="text-xs font-semibold text-orange-500 uppercase tracking-widest mb-1">Automation</p>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Job History</h1>
-          <p className="text-zinc-600 text-sm mt-1">{jobs.length} total jobs</p>
-        </div>
+    <div className="space-y-5">
+      <div className="flex items-center justify-between">
+        <p className="text-[13px] text-[#52525b]">
+          <span className="text-white/70 font-semibold">{jobs.length}</span> total jobs
+        </p>
       </div>
 
       {isLoading ? (

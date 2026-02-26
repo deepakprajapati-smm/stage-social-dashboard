@@ -1,117 +1,89 @@
 'use client'
 
 import { useState } from 'react'
-import { ExternalLink, RefreshCw, MapPin } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { ExternalLink, RotateCw } from 'lucide-react'
 import { setupDistrict } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import type { DistrictsMap } from '@/lib/types'
 
-interface DistrictGridProps {
+export function DistrictGrid({ districts, onJobCreated }: {
   districts: DistrictsMap
   onJobCreated: (jobId: string, label: string) => void
-}
-
-export function DistrictGrid({ districts, onJobCreated }: DistrictGridProps) {
+}) {
   const [loading, setLoading] = useState<string | null>(null)
 
   async function handleSetup(key: string) {
     setLoading(key)
     try {
       const res = await setupDistrict(key)
-      onJobCreated(res.job_id, `Setup: STAGE ${key.charAt(0).toUpperCase() + key.slice(1)}`)
-    } catch (e) {
-      console.error('Setup failed:', e)
-    } finally {
-      setLoading(null)
-    }
+      onJobCreated(res.job_id, `STAGE ${key.charAt(0).toUpperCase() + key.slice(1)}`)
+    } catch (e) { console.error(e) }
+    finally { setLoading(null) }
   }
 
   const entries = Object.entries(districts)
-
-  if (entries.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-3">
-          <MapPin className="w-6 h-6 text-zinc-600" />
-        </div>
-        <p className="text-zinc-500 text-sm">No districts loaded</p>
-        <p className="text-zinc-700 text-xs mt-1">Make sure the API is running</p>
-      </div>
-    )
-  }
+  if (!entries.length) return (
+    <div className="py-20 text-center text-[#52525b] text-[13px]">No districts loaded — check API</div>
+  )
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-      {entries.map(([key, account]) => {
-        const fb     = account.facebook
-        const isDone = fb?.status === 'setup_done'
-        const isLoading = loading === key
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+      {entries.map(([key, acc]) => {
+        const fb     = acc.facebook
+        const done   = fb?.status === 'setup_done'
+        const spin   = loading === key
 
         return (
           <div
             key={key}
             className={cn(
-              'group rounded-xl border p-4 flex flex-col gap-3 transition-all duration-200',
-              isDone
-                ? 'border-green-500/15 bg-green-500/[0.03] hover:border-green-500/25'
-                : 'border-white/[0.06] bg-white/[0.02] hover:border-white/[0.1]',
+              'card-glow group rounded-xl border bg-[#0f0f11] p-4 flex flex-col gap-3 relative overflow-hidden',
+              done ? 'border-emerald-500/[0.15]' : 'border-white/[0.07]',
             )}
           >
+            {/* Top accent */}
+            {done && <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />}
+
             {/* Header */}
             <div className="flex items-start justify-between gap-2">
-              <div className="flex items-center gap-2.5">
-                <div className={cn(
-                  'w-8 h-8 rounded-lg flex items-center justify-center shrink-0',
-                  isDone ? 'bg-green-500/15' : 'bg-zinc-800',
-                )}>
-                  <MapPin className={cn('w-4 h-4', isDone ? 'text-green-400' : 'text-zinc-600')} />
-                </div>
-                <div>
-                  <p className="text-zinc-200 font-semibold text-sm leading-none">{account.district_name}</p>
-                  <p className="text-zinc-600 text-[11px] mt-0.5 truncate max-w-[120px]">{fb?.page_name ?? '—'}</p>
-                </div>
+              <div>
+                <p className="text-[14px] font-semibold text-white tracking-tight">{acc.district_name}</p>
+                <p className="text-[11px] text-[#52525b] mt-0.5">{fb?.page_name ?? '—'}</p>
               </div>
-
-              {/* Status pill */}
               <span className={cn(
-                'shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full',
-                isDone
-                  ? 'bg-green-500/15 text-green-400 border border-green-500/20'
-                  : 'bg-zinc-800 text-zinc-500 border border-zinc-700',
+                'shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full border',
+                done
+                  ? 'text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20'
+                  : 'text-[#71717a] bg-white/[0.04] border-white/[0.08]',
               )}>
-                {isDone ? '✓ Ready' : fb?.status ?? 'unknown'}
+                {done ? '✓ Ready' : 'Pending'}
               </span>
             </div>
 
-            {/* FB Page link */}
-            <div className="flex items-center gap-2">
-              {fb?.page_url ? (
-                <a
-                  href={fb.page_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-blue-400 transition-colors"
-                >
-                  <ExternalLink className="w-3 h-3" />
-                  <span className="truncate">{fb.page_url.replace('https://www.facebook.com/', 'fb.com/')}</span>
-                </a>
-              ) : (
-                <span className="text-zinc-700 text-xs">No FB page yet</span>
-              )}
-            </div>
+            {/* URL */}
+            {fb?.page_url ? (
+              <a
+                href={fb.page_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-[11px] text-[#52525b] hover:text-blue-400 transition-colors w-fit"
+              >
+                <ExternalLink className="w-3 h-3 shrink-0" />
+                <span className="truncate max-w-[180px]">{fb.page_url.replace('https://www.facebook.com/', 'fb.com/')}</span>
+              </a>
+            ) : (
+              <p className="text-[11px] text-[#3f3f46]">No page URL yet</p>
+            )}
 
-            {/* Setup button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="mt-auto w-full h-8 text-xs border border-white/[0.06] hover:border-white/[0.12] hover:bg-white/[0.04] text-zinc-500 hover:text-zinc-200"
-              disabled={isLoading}
+            {/* Button */}
+            <button
               onClick={() => handleSetup(key)}
+              disabled={spin}
+              className="mt-auto w-full flex items-center justify-center gap-2 h-8 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/[0.14] text-[12px] text-[#71717a] hover:text-white/80 transition-all disabled:opacity-50"
             >
-              <RefreshCw className={cn('w-3 h-3 mr-1.5', isLoading && 'animate-spin')} />
-              {isLoading ? 'Starting job...' : 'Refresh Setup'}
-            </Button>
+              <RotateCw className={cn('w-3 h-3', spin && 'animate-spin')} />
+              {spin ? 'Starting...' : 'Refresh Setup'}
+            </button>
           </div>
         )
       })}

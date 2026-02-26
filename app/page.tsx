@@ -15,18 +15,7 @@ export default function DashboardPage() {
   const movieCount    = Object.keys(movies).length
 
   return (
-    <div className="space-y-6 max-w-5xl">
-      {/* Page header */}
-      <div className="flex items-end justify-between">
-        <div>
-          <p className="text-xs font-semibold text-orange-500 uppercase tracking-widest mb-1">Overview</p>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Dashboard</h1>
-        </div>
-        <p className="text-zinc-600 text-xs pb-1">
-          {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
-        </p>
-      </div>
-
+    <div className="space-y-5">
       <StatsCards jobs={jobs} districtCount={districtCount} movieCount={movieCount} />
       <RecentJobs jobs={jobs} />
     </div>

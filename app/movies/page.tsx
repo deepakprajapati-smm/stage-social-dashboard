@@ -60,16 +60,12 @@ export default function MoviesPage() {
   const movieCount = Object.keys(movies).length
 
   return (
-    <div className="space-y-6 max-w-5xl">
-      <div className="flex items-end justify-between">
-        <div>
-          <p className="text-xs font-semibold text-orange-500 uppercase tracking-widest mb-1">Facebook</p>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Movie Pages</h1>
-          <p className="text-zinc-600 text-sm mt-1">{movieCount} pages created</p>
-        </div>
-        <div className="pb-1">
-          <CreateMovieDialog onJobCreated={handleJobCreated} />
-        </div>
+    <div className="space-y-5">
+      <div className="flex items-center justify-between">
+        <p className="text-[13px] text-[#52525b]">
+          <span className="text-white/70 font-semibold">{movieCount}</span> pages created
+        </p>
+        <CreateMovieDialog onJobCreated={handleJobCreated} />
       </div>
 
       {activeJobId && (

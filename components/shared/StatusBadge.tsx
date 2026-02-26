@@ -1,21 +1,20 @@
 import type { JobStatus } from '@/lib/types'
-import { cn } from '@/lib/utils'
 
-const CONFIG: Record<JobStatus, { label: string; dot: string; text: string; bg: string }> = {
-  queued:  { label: 'Queued',  dot: 'bg-zinc-500',              text: 'text-zinc-400',  bg: 'bg-zinc-500/10 border-zinc-500/20' },
-  running: { label: 'Running', dot: 'bg-blue-400 status-pulse', text: 'text-blue-400',  bg: 'bg-blue-500/10 border-blue-500/20' },
-  done:    { label: 'Done',    dot: 'bg-green-400',             text: 'text-green-400', bg: 'bg-green-500/10 border-green-500/20' },
-  failed:  { label: 'Failed',  dot: 'bg-red-400',               text: 'text-red-400',   bg: 'bg-red-500/10 border-red-500/20'  },
+const C: Record<JobStatus, { label: string; dot: string; cls: string }> = {
+  queued:  { label: 'Queued',  dot: '#52525b', cls: 'text-[#71717a] bg-white/[0.05] border-white/[0.08]' },
+  running: { label: 'Running', dot: '#60a5fa', cls: 'text-blue-400 bg-blue-500/[0.08] border-blue-500/20' },
+  done:    { label: 'Done',    dot: '#4ade80', cls: 'text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20' },
+  failed:  { label: 'Failed',  dot: '#f87171', cls: 'text-red-400 bg-red-500/[0.08] border-red-500/20' },
 }
 
 export function StatusBadge({ status }: { status: JobStatus }) {
-  const c = CONFIG[status] ?? CONFIG.queued
+  const c = C[status] ?? C.queued
   return (
-    <span className={cn(
-      'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-xs font-medium',
-      c.bg, c.text,
-    )}>
-      <span className={cn('w-1.5 h-1.5 rounded-full shrink-0', c.dot)} />
+    <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[11px] font-medium ${c.cls}`}>
+      <span
+        className={status === 'running' ? 'live-pulse' : ''}
+        style={{ width: 5, height: 5, borderRadius: '99px', background: c.dot, display: 'inline-block', flexShrink: 0 }}
+      />
       {c.label}
     </span>
   )
