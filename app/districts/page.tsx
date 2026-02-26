@@ -33,11 +33,20 @@ export default function DistrictsPage() {
 
   return (
     <div className="space-y-6 max-w-5xl">
-      <div>
-        <h1 className="text-xl font-bold text-zinc-100">District Pages</h1>
-        <p className="text-zinc-500 text-sm mt-1">
-          {done}/{count} pages ready
-        </p>
+      <div className="flex items-end justify-between">
+        <div>
+          <p className="text-xs font-semibold text-orange-500 uppercase tracking-widest mb-1">Rajasthan</p>
+          <h1 className="text-2xl font-bold text-white tracking-tight">District Pages</h1>
+        </div>
+        <div className="flex items-center gap-2 pb-1">
+          <span className="text-xs text-zinc-600">{done}/{count} ready</span>
+          <div className="w-24 h-1.5 rounded-full bg-zinc-800 overflow-hidden">
+            <div
+              className="h-full rounded-full bg-green-500 transition-all"
+              style={{ width: count > 0 ? `${(done / count) * 100}%` : '0%' }}
+            />
+          </div>
+        </div>
       </div>
 
       {isLoading ? (

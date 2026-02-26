@@ -61,12 +61,15 @@ export default function MoviesPage() {
 
   return (
     <div className="space-y-6 max-w-5xl">
-      <div className="flex items-center justify-between">
+      <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-xl font-bold text-zinc-100">Movie Pages</h1>
-          <p className="text-zinc-500 text-sm mt-1">{movieCount} pages created</p>
+          <p className="text-xs font-semibold text-orange-500 uppercase tracking-widest mb-1">Facebook</p>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Movie Pages</h1>
+          <p className="text-zinc-600 text-sm mt-1">{movieCount} pages created</p>
         </div>
-        <CreateMovieDialog onJobCreated={handleJobCreated} />
+        <div className="pb-1">
+          <CreateMovieDialog onJobCreated={handleJobCreated} />
+        </div>
       </div>
 
       {activeJobId && (

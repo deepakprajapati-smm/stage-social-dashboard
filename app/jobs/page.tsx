@@ -17,9 +17,12 @@ export default function JobsPage() {
 
   return (
     <div className="space-y-6 max-w-5xl">
-      <div>
-        <h1 className="text-xl font-bold text-zinc-100">Job History</h1>
-        <p className="text-zinc-500 text-sm mt-1">{jobs.length} total jobs</p>
+      <div className="flex items-end justify-between">
+        <div>
+          <p className="text-xs font-semibold text-orange-500 uppercase tracking-widest mb-1">Automation</p>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Job History</h1>
+          <p className="text-zinc-600 text-sm mt-1">{jobs.length} total jobs</p>
+        </div>
       </div>
 
       {isLoading ? (

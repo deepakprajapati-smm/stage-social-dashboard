@@ -2,7 +2,7 @@
 
 import useSWR from 'swr'
 import { getStatus } from '@/lib/api'
-import { Circle } from 'lucide-react'
+import { Zap, ZapOff } from 'lucide-react'
 import type { ChromeStatus } from '@/lib/types'
 
 export function TopBar() {
@@ -10,27 +10,33 @@ export function TopBar() {
     refreshInterval: 10000,
   })
 
-  const ready = data?.chrome_ready
+  const ready     = data?.chrome_ready
+  const isLoading = ready === undefined
 
   return (
-    <header className="h-12 border-b border-zinc-800 bg-zinc-950 flex items-center justify-between px-5 shrink-0">
-      <span className="text-sm text-zinc-400">STAGE Social Automation Dashboard</span>
+    <header className="h-13 border-b border-white/[0.06] bg-[#0e0e0e]/80 backdrop-blur-sm flex items-center justify-between px-6 shrink-0">
 
-      <div className="flex items-center gap-2 text-xs">
-        <Circle
-          className={`w-2.5 h-2.5 fill-current ${
-            ready === undefined
-              ? 'text-zinc-600'
-              : ready
-              ? 'text-green-500'
-              : 'text-red-500'
-          }`}
-        />
-        <span className={ready === undefined ? 'text-zinc-500' : ready ? 'text-green-400' : 'text-red-400'}>
-          {ready === undefined ? 'Checking Chrome...' : ready ? 'Chrome Ready' : 'Chrome Offline'}
-        </span>
-        {data?.browser && (
-          <span className="text-zinc-600 hidden sm:inline">({data.browser})</span>
+      {/* Left — Page context (empty, pages fill this) */}
+      <div />
+
+      {/* Right — Chrome status */}
+      <div className="flex items-center gap-3">
+        {isLoading ? (
+          <div className="flex items-center gap-2 text-zinc-600 text-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 animate-pulse" />
+            Checking...
+          </div>
+        ) : ready ? (
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
+            <Zap className="w-3 h-3 text-green-400 fill-green-400" />
+            <span className="text-green-400 text-xs font-medium">Chrome Ready</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20">
+            <ZapOff className="w-3 h-3 text-red-400" />
+            <span className="text-red-400 text-xs font-medium">Chrome Offline</span>
+            <span className="text-zinc-600 text-xs hidden sm:inline">· run start-local.sh</span>
+          </div>
         )}
       </div>
     </header>
