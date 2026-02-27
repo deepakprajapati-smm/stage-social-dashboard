@@ -6,6 +6,7 @@ import { Sidebar } from '@/components/layout/Sidebar'
 import { TopBar } from '@/components/layout/TopBar'
 import { Toaster } from '@/components/ui/sonner'
 import { ApiUrlInit } from '@/components/ApiUrlInit'
+import { RunningJobMonitor } from '@/components/RunningJobMonitor'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -42,6 +43,7 @@ export default function RootLayout({
           </div>
         </div>
         <Suspense fallback={null}><ApiUrlInit /></Suspense>
+        <RunningJobMonitor />
         <Toaster theme="dark" />
       </body>
     </html>
