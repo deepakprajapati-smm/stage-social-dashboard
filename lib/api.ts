@@ -9,10 +9,11 @@ import type {
 } from './types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? 'stage-social-2026'
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...init?.headers },
+    headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY, ...init?.headers },
     ...init,
   })
   if (!res.ok) {
