@@ -2,53 +2,41 @@
 
 import { useState } from 'react'
 import useSWR from 'swr'
-import { getDistricts } from '@/lib/api'
-import { DistrictGrid } from '@/components/districts/DistrictGrid'
-import { LogDrawer } from '@/components/jobs/LogDrawer'
-import { getJob } from '@/lib/api'
-import type { DistrictsMap, Job } from '@/lib/types'
+import { getDistricts, getMovies } from '@/lib/api'
+import { AllPagesGrid } from '@/components/districts/AllPagesGrid'
+import type { DistrictsMap, MoviePagesMap } from '@/lib/types'
 
-export default function DistrictsPage() {
-  const { data: districts = {}, isLoading } = useSWR<DistrictsMap>(
-    '/api/districts',
-    getDistricts,
-    { refreshInterval: 30000 },
+export default function PagesPage() {
+  const { data: districts = {}, isLoading: loadingD } = useSWR<DistrictsMap>(
+    '/api/districts', getDistricts, { refreshInterval: 30000 },
   )
-  const [activeJob, setActiveJob]   = useState<Job | null>(null)
-  const [drawerOpen, setDrawerOpen] = useState(false)
+  const { data: movies = {}, isLoading: loadingM } = useSWR<MoviePagesMap>(
+    '/api/movies', getMovies, { refreshInterval: 30000 },
+  )
 
-  async function handleJobCreated(jobId: string, label: string) {
-    // Optimistically open drawer with a minimal job object
-    const job = await getJob(jobId).catch(() => null)
-    if (job) {
-      setActiveJob(job)
-      setDrawerOpen(true)
-    }
-  }
-
-  const count = Object.keys(districts).length
-  const done  = Object.values(districts).filter(
-    (d) => d.facebook?.status === 'setup_done'
-  ).length
+  const totalPages   = Object.keys(districts).length + Object.keys(movies).length
+  const districtDone = Object.values(districts).filter(d => d.facebook?.status === 'setup_done').length
+  const movieDone    = Object.keys(movies).length
+  const totalDone    = districtDone + movieDone
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-4">
         <p className="text-[13px] text-[#52525b]">
-          <span className="text-emerald-400 font-semibold">{done}</span>/{count} pages ready
+          <span className="text-emerald-400 font-semibold">{totalDone}</span>
+          <span className="text-[#3f3f46]">/{totalPages}</span> pages ready
         </p>
+        <span className="text-[11px] text-[#3f3f46]">·</span>
+        <p className="text-[11px] text-[#3f3f46]">{Object.keys(districts).length} districts · {Object.keys(movies).length} movies</p>
       </div>
 
-      {isLoading ? (
+      {(loadingD || loadingM) ? (
         <p className="text-zinc-600 text-sm">Loading...</p>
       ) : (
-        <DistrictGrid districts={districts} onJobCreated={handleJobCreated} />
-      )}
-
-      {drawerOpen && (
-        <LogDrawer
-          job={activeJob}
-          onClose={() => { setDrawerOpen(false); setActiveJob(null) }}
+        <AllPagesGrid
+          districts={districts}
+          movies={movies}
+          onJobCreated={() => {}}
         />
       )}
     </div>
