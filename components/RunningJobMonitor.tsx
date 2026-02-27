@@ -78,7 +78,7 @@ export function RunningJobMonitor() {
             <span className="w-2 h-2 rounded-full bg-red-400" />
           )}
           <span className="text-white text-sm font-semibold">
-            {activeJob.title_name || activeJob.title || 'Running Job'}
+            {activeJob.title_name || activeJob.movie_title || 'Running Job'}
           </span>
           <span className="text-zinc-600 text-xs font-mono">{activeJob.id.slice(0, 8)}</span>
         </div>
