@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { Suspense } from 'react'
 import './globals.css'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { TopBar } from '@/components/layout/TopBar'
 import { Toaster } from '@/components/ui/sonner'
+import { ApiUrlInit } from '@/components/ApiUrlInit'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -39,6 +41,7 @@ export default function RootLayout({
             </main>
           </div>
         </div>
+        <Suspense fallback={null}><ApiUrlInit /></Suspense>
         <Toaster theme="dark" />
       </body>
     </html>

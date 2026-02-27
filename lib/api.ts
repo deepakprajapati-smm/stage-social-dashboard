@@ -8,11 +8,18 @@ import type {
   ChromeStatus,
 } from './types'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'
+function getApiUrl(): string {
+  if (typeof window !== 'undefined') {
+    const stored = localStorage.getItem('stage_api_url')
+    if (stored) return stored
+  }
+  return process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'
+}
+
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? 'stage-social-2026'
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
+  const res = await fetch(`${getApiUrl()}${path}`, {
     headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY, ...init?.headers },
     ...init,
   })
@@ -65,5 +72,5 @@ export function getJob(jobId: string): Promise<Job> {
 }
 
 export function getJobStreamUrl(jobId: string): string {
-  return `${API_URL}/api/jobs/${jobId}/stream`
+  return `${getApiUrl()}/api/jobs/${jobId}/stream`
 }
