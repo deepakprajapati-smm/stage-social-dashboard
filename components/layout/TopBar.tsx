@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 
 const TITLES: Record<string, { label: string; desc: string }> = {
   '/':          { label: 'Overview',       desc: 'Automation stats and recent activity' },
-  '/districts': { label: 'District Pages', desc: '12 Rajasthan districts on Facebook' },
+  '/districts': { label: 'Ready to Use Pages', desc: 'All district Facebook pages — live and ready' },
   '/movies':    { label: 'Movie Pages',    desc: 'Create and manage movie FB pages' },
   '/jobs':      { label: 'Job History',    desc: 'All automation runs and logs' },
 }

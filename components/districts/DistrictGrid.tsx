@@ -60,30 +60,32 @@ export function DistrictGrid({ districts, onJobCreated }: {
               </span>
             </div>
 
-            {/* URL */}
-            {fb?.page_url ? (
-              <a
-                href={fb.page_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-[11px] text-[#52525b] hover:text-blue-400 transition-colors w-fit"
+            {/* Buttons row */}
+            <div className="mt-auto flex gap-2">
+              {fb?.page_url ? (
+                <a
+                  href={fb.page_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 flex items-center justify-center gap-1.5 h-8 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[12px] font-medium transition-colors"
+                >
+                  <ExternalLink className="w-3 h-3 shrink-0" />
+                  Open on Facebook
+                </a>
+              ) : (
+                <div className="flex-1 flex items-center justify-center h-8 rounded-lg bg-white/[0.03] border border-white/[0.07] text-[11px] text-[#3f3f46]">
+                  No page yet
+                </div>
+              )}
+              <button
+                onClick={() => handleSetup(key)}
+                disabled={spin}
+                title="Refresh Setup"
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06] text-[#52525b] hover:text-white/80 transition-all disabled:opacity-50 shrink-0"
               >
-                <ExternalLink className="w-3 h-3 shrink-0" />
-                <span className="truncate max-w-[180px]">{fb.page_url.replace('https://www.facebook.com/', 'fb.com/')}</span>
-              </a>
-            ) : (
-              <p className="text-[11px] text-[#3f3f46]">No page URL yet</p>
-            )}
-
-            {/* Button */}
-            <button
-              onClick={() => handleSetup(key)}
-              disabled={spin}
-              className="mt-auto w-full flex items-center justify-center gap-2 h-8 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/[0.14] text-[12px] text-[#71717a] hover:text-white/80 transition-all disabled:opacity-50"
-            >
-              <RotateCw className={cn('w-3 h-3', spin && 'animate-spin')} />
-              {spin ? 'Starting...' : 'Refresh Setup'}
-            </button>
+                <RotateCw className={cn('w-3.5 h-3.5', spin && 'animate-spin')} />
+              </button>
+            </div>
           </div>
         )
       })}

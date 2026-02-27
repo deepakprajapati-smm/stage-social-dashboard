@@ -10,7 +10,7 @@ import type { ChromeStatus } from '@/lib/types'
 
 const NAV = [
   { href: '/',          label: 'Overview',  icon: LayoutDashboard },
-  { href: '/districts', label: 'Districts', icon: MapPin },
+  { href: '/districts', label: 'Pages',     icon: MapPin },
   { href: '/movies',    label: 'Movies',    icon: Film },
   { href: '/jobs',      label: 'Jobs',      icon: Clock },
 ]
